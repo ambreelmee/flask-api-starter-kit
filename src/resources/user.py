@@ -8,7 +8,7 @@ from flask.ext.restful.reqparse import Argument
 from flask.json import jsonify
 
 from repositories import UserRepository
-from util import parse_params
+from util import parse_params, authorized
 
 
 class UserResource(Resource):
@@ -31,6 +31,7 @@ class UserResource(Resource):
         ),
     )
     @swag_from('../swagger/user/POST.yml')
+    @authorized
     def post(last_name, first_name, age):
         """ Create an user based on the sent information """
         user = UserRepository.create(
@@ -50,6 +51,7 @@ class UserResource(Resource):
         ),
     )
     @swag_from('../swagger/user/PUT.yml')
+    @authorized
     def put(last_name, first_name, age):
         """ Update an user based on the sent information """
         repository = UserRepository()

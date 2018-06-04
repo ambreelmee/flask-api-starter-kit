@@ -1,5 +1,5 @@
 install:
-	docker-compose run --rm server pip install -r requirements-dev.txt --user --upgrade
+	docker-compose run --rm server pip install --proxy=10.244.16.9:9090 -r requirements-dev.txt --user --upgrade
 
 start:
 	docker-compose up server
