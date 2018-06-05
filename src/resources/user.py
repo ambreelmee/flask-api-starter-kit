@@ -8,7 +8,8 @@ from flask.ext.restful.reqparse import Argument
 from flask.json import jsonify
 
 from repositories import UserRepository
-from util import parse_params, authorized
+from util import parse_params
+from util.authorized import authorized
 
 
 class UserResource(Resource):

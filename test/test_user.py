@@ -1,6 +1,6 @@
-import unittest
+from unittest.mock import patch
 import json
-
+import unittest
 from server import server
 from models.abc import db
 from models import User
@@ -32,11 +32,13 @@ class TestUser(unittest.TestCase):
             {'user': {'age': 25, 'first_name': 'John', 'last_name': 'Doe'}}
         )
 
-    def test_create(self):
+    @patch('util.authorized.validate_token', return_value=True)
+    def test_create(self, mock_decorator):
         """ The POST on `/user` should create an user """
         response = self.client.post(
             '/application/user/Doe/John',
             content_type='application/json',
+            headers={'Authorization': 'Bearer token'},
             data=json.dumps({
                 'age': 30
             })
@@ -50,12 +52,14 @@ class TestUser(unittest.TestCase):
         )
         self.assertEqual(User.query.count(), 1)
 
-    def test_update(self):
+    @patch('util.authorized.validate_token', return_value=True)
+    def test_update(self, mock_decorator):
         """ The PUT on `/user` should update an user's age """
         UserRepository.create(first_name='John', last_name='Doe', age=25)
         response = self.client.put(
             '/application/user/Doe/John',
             content_type='application/json',
+            headers={'Authorization': 'Bearer token'},
             data=json.dumps({
                 'age': 30
             })
