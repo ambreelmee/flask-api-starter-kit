@@ -33,7 +33,7 @@ testserver:
   environment:
     APPLICATION_PORT: 5053
     APPLICATION_DB_CONTAINER: TESTDB
-  command: python -m pytest test/
+  command: python -m pytest --cov=src test/
 
 testdb:
   image: postgres:9.4
