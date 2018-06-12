@@ -12,7 +12,7 @@ class UserRepository:
         return User.query.filter_by(
             last_name=last_name,
             first_name=first_name
-        ).one()
+        ).first()
 
     def update(self, last_name, first_name, age):
         """ Update a user's age """

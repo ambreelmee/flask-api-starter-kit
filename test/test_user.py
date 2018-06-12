@@ -20,6 +20,13 @@ class TestUser(unittest.TestCase):
         db.session.remove()
         db.drop_all()
 
+    def test_get_error(self):
+        """ The GET on `/user` which is not in database
+        should return an error """
+        response = self.client.get('/api/users/Doe/John')
+
+        self.assertEqual(response.status_code, 400)
+
     def test_get(self):
         """ The GET on `/user` should return an user """
         UserRepository.create(first_name='John', last_name='Doe', age=25)
@@ -32,9 +39,50 @@ class TestUser(unittest.TestCase):
             {'user': {'age': 25, 'first_name': 'John', 'last_name': 'Doe'}}
         )
 
+    def test_create_no_token(self):
+        """ The POST on `/user` should not work if token is not valid """
+        response = self.client.post(
+            '/api/users/Doe/John',
+            content_type='application/json',
+            data=json.dumps({
+                'age': 30
+            })
+        )
+
+        self.assertEqual(response.status_code, 401)
+
+    @patch('util.authorized.validate_token', return_value=False)
+    def test_create_unauthorized(self, mock_decorator):
+        """ The POST on `/user` should not work if token is not valid """
+        response = self.client.post(
+            '/api/users/Doe/John',
+            content_type='application/json',
+            headers={'Authorization': 'Bearer token'},
+            data=json.dumps({
+                'age': 30
+            })
+        )
+
+        self.assertEqual(response.status_code, 401)
+
     @patch('util.authorized.validate_token', return_value=True)
     def test_create(self, mock_decorator):
         """ The POST on `/user` should create an user """
+        UserRepository.create(first_name='John', last_name='Doe', age=25)
+        response = self.client.post(
+            '/api/users/Doe/John',
+            content_type='application/json',
+            headers={'Authorization': 'Bearer token'},
+            data=json.dumps({
+                'age': 30
+            })
+        )
+
+        self.assertEqual(response.status_code, 400)
+
+    @patch('util.authorized.validate_token', return_value=True)
+    def test_create_duplicate(self, mock_decorator):
+        """ The POST on `/user` should not create an user if already exists """
         response = self.client.post(
             '/api/users/Doe/John',
             content_type='application/json',

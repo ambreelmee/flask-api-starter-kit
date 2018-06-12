@@ -8,7 +8,7 @@ from flask.ext.restful.reqparse import Argument
 from flask.json import jsonify
 
 from repositories import UserRepository
-from util import parse_params
+from util import parse_params, bad_request
 from util.authorized import authorized
 
 
@@ -20,7 +20,9 @@ class UserResource(Resource):
     def get(last_name, first_name):
         """ Return an user key information based on his name """
         user = UserRepository.get(last_name=last_name, first_name=first_name)
-        return jsonify({'user': user.json})
+        if user:
+            return jsonify({'user': user.json})
+        return bad_request('user not found')
 
     @staticmethod
     @parse_params(
@@ -35,12 +37,18 @@ class UserResource(Resource):
     @authorized
     def post(last_name, first_name, age):
         """ Create an user based on the sent information """
+        existing_user = UserRepository.get(
+            last_name=last_name, first_name=first_name)
+        if existing_user:
+            return bad_request('user already in database')
         user = UserRepository.create(
             last_name=last_name,
             first_name=first_name,
             age=age
         )
-        return jsonify({'user': user.json})
+        if user:
+            return jsonify({'user': user.json})
+        return bad_request('unable to create user')
 
     @staticmethod
     @parse_params(
@@ -61,4 +69,6 @@ class UserResource(Resource):
             first_name=first_name,
             age=age
         )
-        return jsonify({'user': user.json})
+        if user:
+            return jsonify({'user': user.json})
+        return bad_request('unable to update user')
