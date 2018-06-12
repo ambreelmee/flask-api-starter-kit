@@ -22,11 +22,11 @@ server.config['SWAGGER'] = {
             "version": "0.0.1",
             "title": "Application",
             "endpoint": 'spec',
-            "route": '/application/spec',
+            "route": '/api/spec',
             "rule_filter": lambda rule: True  # all in
         }
     ],
-    "static_url_path": "/application/apidocs"
+    "static_url_path": "/api/apidocs"
 }
 
 Swagger(server)

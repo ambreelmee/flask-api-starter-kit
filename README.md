@@ -37,7 +37,7 @@ Then install dependencies and check that it works
 $ make install      # Install the pip dependencies on the docker container
 $ make start        # Run the container containing your local python server
 ```
-If everything works, you should see the available routes [here](http://127.0.0.1:3000/application/spec).
+If everything works, you should see the available routes [here](http://127.0.0.1:3000/api/spec).
 
 The API runs locally on docker containers. You can easily change the python version you are willing to use [here](https://github.com/ambreelmee/flask-api-starter-kit/blob/master/docker-compose.yml#L4), by fetching a docker image of the python version you want.
 

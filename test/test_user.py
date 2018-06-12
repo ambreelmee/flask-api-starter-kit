@@ -23,7 +23,7 @@ class TestUser(unittest.TestCase):
     def test_get(self):
         """ The GET on `/user` should return an user """
         UserRepository.create(first_name='John', last_name='Doe', age=25)
-        response = self.client.get('/application/user/Doe/John')
+        response = self.client.get('/api/users/Doe/John')
 
         self.assertEqual(response.status_code, 200)
         response_json = json.loads(response.data.decode('utf-8'))
@@ -36,7 +36,7 @@ class TestUser(unittest.TestCase):
     def test_create(self, mock_decorator):
         """ The POST on `/user` should create an user """
         response = self.client.post(
-            '/application/user/Doe/John',
+            '/api/users/Doe/John',
             content_type='application/json',
             headers={'Authorization': 'Bearer token'},
             data=json.dumps({
@@ -57,7 +57,7 @@ class TestUser(unittest.TestCase):
         """ The PUT on `/user` should update an user's age """
         UserRepository.create(first_name='John', last_name='Doe', age=25)
         response = self.client.put(
-            '/application/user/Doe/John',
+            '/api/users/Doe/John',
             content_type='application/json',
             headers={'Authorization': 'Bearer token'},
             data=json.dumps({

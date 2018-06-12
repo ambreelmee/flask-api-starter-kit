@@ -47,7 +47,7 @@ class TestSwaggerCoverage(unittest.TestCase):
         # suppress flasgger unclosed file warnings
         with warnings.catch_warnings():
             warnings.filterwarnings("ignore", message="unclosed file")
-            response = self.client.get('application/spec')
+            response = self.client.get('api/spec')
         response_json = json.loads(response.data.decode('utf-8'))
         swagger_specs = response_json['paths']
 
